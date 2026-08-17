@@ -15,8 +15,8 @@ def test_runtime_config_keeps_token_out_of_repr(tmp_path) -> None:
 
     assert config.access_token == "private-value"
     assert config.user_agent == (
-        "akashic-plugins/bangumi-mcp/0.5.0 "
-        "(https://github.com/akashic-plugins/bangumi-mcp)"
+        "roxy-plugins/bangumi-mcp/0.5.0 "
+        "(https://github.com/roxy-plugins/bangumi-mcp)"
     )
     assert config.anime_push.enabled is False
     assert "private-value" not in repr(config)

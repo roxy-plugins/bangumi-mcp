@@ -3,7 +3,7 @@
 - 状态：Implemented（修订 5）
 - 目标版本：`0.5.0`
 - 日期：2026-08-08
-- 依据：[Bangumi 官方 API](https://bangumi.github.io/api/)、[AniList API](https://docs.anilist.co/)、Akashic `create-proactive-source` skill、`proactive_v2` 实现
+- 依据：[Bangumi 官方 API](https://bangumi.github.io/api/)、[AniList API](https://docs.anilist.co/)、Roxy `create-proactive-source` skill、`proactive_v2` 实现
 
 ## 1. 问题和用户意图
 
@@ -25,7 +25,7 @@
 ### 3.1 精度承诺
 
 - `airingAt` 是秒级 Unix 时间戳；插件把提醒时刻规范化到分钟。
-- 到达提醒时刻后，事件会在 Akashic 下一次 proactive tick 被读取和投递。
+- 到达提醒时刻后，事件会在 Roxy 下一次 proactive tick 被读取和投递。
 - proactive tick、Gate、Judge、目标会话 busy 和外部 channel 状态都可能造成数分钟或更久的延迟。
 - 本功能不承诺在计划放送时刻的同一分钟送达，只承诺使用该分钟作为提醒依据并在后续可用 tick 尽快投递。
 
@@ -35,7 +35,7 @@
 - 不提供 Bangumi 日期粒度提醒。
 - 不使用 Playwright、搜索引擎或网页解析作为 fallback。
 - 不做放送倒计时页面或下周预告。
-- 不修改 Akashic Core 的调度、Gate、Judge、Deliver 或 ACK 协议。
+- 不修改 Roxy Core 的调度、Gate、Judge、Deliver 或 ACK 协议。
 - 不用插件 `PluginJobSpec` 驱动刷新；缓存新鲜度由 MCP lifespan 内的后台任务维护。
 
 ## 4. 已确认事实和未知边界
@@ -65,7 +65,7 @@
 
 - AniList 和 Bangumi 没有共同的官方稳定 ID，部分动画只能由用户配置显式映射。
 - 外部计划可能临时延后或取消。事件进入 `pending` 前允许更新 schedule；进入 `pending` 后保留当时的不可变事件快照。
-- Akashic proactive source 是 best-effort 主动投递链路，不提供端到端严格恰好一次发送。
+- Roxy proactive source 是 best-effort 主动投递链路，不提供端到端严格恰好一次发送。
 
 ## 5. Owner 和总体结构
 
@@ -81,11 +81,11 @@
 │  │  └─ scheduled → pending / suppressed / expired
 │  └─ <plugin-data>/anime_updates.db
 │
-├─ Akashic proactive tick
+├─ Roxy proactive tick
 │  └─ fetch_tool 只读 pending alert 快照
 │
 ├─ Gate / Judge / Resolve / Deliver
-│  └─ Akashic Core 拥有外部发送
+│  └─ Roxy Core 拥有外部发送
 │
 └─ Deliver 成功
    └─ ack_tool: pending → acked
@@ -95,10 +95,10 @@
 |---|---|---|
 | Bangumi Token、AniList Token、映射覆盖和开关 | plugin-data `config.local.toml` | Bangumi MCP、插件声明 |
 | AniList schedule、Bangumi episode 映射、pending/ACK 和重试状态 | Bangumi MCP SQLite | proactive fetch/ACK 工具 |
-| source catalog、Gate、Judge、delivery dedupe | Akashic Core | proactive runtime |
-| 外部消息和主动会话历史 | Akashic Core | channel、session store |
+| source catalog、Gate、Judge、delivery dedupe | Roxy Core | proactive runtime |
+| 外部消息和主动会话历史 | Roxy Core | channel、session store |
 
-本功能不需要 Akashic runtime patch。插件只使用公开的 MCP 和 `ProactiveSourceSpec` 合同。
+本功能不需要 Roxy runtime patch。插件只使用公开的 MCP 和 `ProactiveSourceSpec` 合同。
 
 ## 6. 插件声明和配置
 
@@ -127,7 +127,7 @@ anilist_token = "<AniList Access Token>"
 
 ### 6.2 Source 声明
 
-宿主 proactive 是否启用由 Akashic Core 管理，插件只检查自己的开关。
+宿主 proactive 是否启用由 Roxy Core 管理，插件只检查自己的开关。
 
 ```python
 def proactive_sources(self) -> list[ProactiveSourceSpec]:
@@ -160,7 +160,7 @@ FastMCP lifespan 在 `anime_push.enabled=true` 时启动一个受控后台任务
 2. **schedule refresh**：启动时执行，随后默认每 30 分钟执行一次并加入抖动。
 3. **due evaluation**：每分钟只读取本地 schedule，计算是否进入提醒窗口；除到期前的观看状态复核外不访问网络。
 
-这些频率属于插件缓存新鲜度，不驱动 Akashic agent，也不承诺外部消息的精确送达时刻。
+这些频率属于插件缓存新鲜度，不驱动 Roxy agent，也不承诺外部消息的精确送达时刻。
 
 ### 7.2 Catalog refresh
 
@@ -324,7 +324,7 @@ AniList 即使返回 HTTP `200` 也可能带顶层 `errors`；存在 `errors`、
 3. 已经 `acked` 的 ID 重复 ACK 成功返回，保持幂等。
 4. 未知、`scheduled`、`suppressed` 或 `expired` 的 ID 使整批 ACK fail-loud，不做部分提交。
 
-Akashic Core 只在真实外部送达后调用成功 ACK。dispatch 失败时 pending 保留；若消息已送达但插件 ACK 失败，Core delivery dedupe 会阻止相同 evidence 再次发送，并在后续去重路径重试 ACK。
+Roxy Core 只在真实外部送达后调用成功 ACK。dispatch 失败时 pending 保留；若消息已送达但插件 ACK 失败，Core delivery dedupe 会阻止相同 evidence 再次发送，并在后续去重路径重试 ACK。
 
 外部 channel 成功返回后、Core 写入 delivery 状态前仍存在进程崩溃窗口，因此本设计不承诺端到端严格恰好一次。
 

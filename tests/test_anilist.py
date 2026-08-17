@@ -40,7 +40,7 @@ class FakeSession:
 
 def client(session: FakeSession, token: str | None = None) -> AniListClient:
     return AniListClient(
-        user_agent="akashic-plugins/bangumi-mcp/0.5.0 (https://example.test)",
+        user_agent="roxy-plugins/bangumi-mcp/0.5.0 (https://example.test)",
         token=token,
         session=session,
     )

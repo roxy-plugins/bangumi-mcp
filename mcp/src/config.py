@@ -9,8 +9,8 @@ from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 
 DEFAULT_USER_AGENT = (
-    "akashic-plugins/bangumi-mcp/0.5.0 "
-    "(https://github.com/akashic-plugins/bangumi-mcp)"
+    "roxy-plugins/bangumi-mcp/0.5.0 "
+    "(https://github.com/roxy-plugins/bangumi-mcp)"
 )
 
 

@@ -21,5 +21,5 @@
 
 ## 仓库与凭据边界
 
-- `/Users/lfegg/Documents/GitHub/akashic-agent` 只允许按任务需要只读参考，不得修改、暂存或提交其中任何文件。
-- Bangumi Access Token 只能保存在 Akashic plugin-data 的私密配置中，不得写入 Git、日志、命令参数或回复。
+- 本地 `roxy-agent` checkout 只允许按任务需要只读参考，不得修改、暂存或提交其中任何文件。
+- Bangumi Access Token 只能保存在 Roxy plugin-data 的私密配置中，不得写入 Git、日志、命令参数或回复。

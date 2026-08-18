@@ -40,7 +40,7 @@ def client(session: FakeSession, token: str = "secret-token") -> BangumiClient:
     return BangumiClient(
         BangumiRuntimeConfig(
             access_token=token,
-            user_agent="akashic-plugins/bangumi-mcp/0.5.0 (https://example.test)",
+            user_agent="roxy-plugins/bangumi-mcp/0.5.0 (https://example.test)",
         ),
         session=session,
     )
@@ -152,7 +152,7 @@ def test_status_write_only_sends_collection_type() -> None:
                 "Accept": "application/json",
                 "Authorization": "Bearer secret-token",
                 "User-Agent": (
-                    "akashic-plugins/bangumi-mcp/0.5.0 "
+                    "roxy-plugins/bangumi-mcp/0.5.0 "
                     "(https://example.test)"
                 ),
             },

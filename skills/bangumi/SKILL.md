@@ -51,11 +51,11 @@ description: 分页查询用户的 Bangumi 收藏列表、单个条目状态和�
 主动提醒中的时间是 AniList 提供的计划放送时间。向用户解释时必须保持以下边界：
 
 - 只能说该集“计划放送”，不能说某个流媒体、字幕组或下载源已经上线。
-- 提醒可能因 Akashic proactive tick、会话繁忙或外部 channel 状态延后，不要把实际送达时间解释为计划时间发生变化。
+- 提醒可能因 Roxy proactive tick、会话繁忙或外部 channel 状态延后，不要把实际送达时间解释为计划时间发生变化。
 - 标题和正文中的绝对时间及其时区是权威展示，不要改写为“刚刚”“N 分钟后”等相对时间。
-- `get_anime_update_alerts` 和 `acknowledge_anime_update_alerts` 由 Akashic 主动投递链路调用。模型不得为了查询、重放、跳过或修改提醒而手动调用它们。
+- `get_anime_update_alerts` 和 `acknowledge_anime_update_alerts` 由 Roxy 主动投递链路调用。模型不得为了查询、重放、跳过或修改提醒而手动调用它们。
 - 用户想停止提醒时，说明应在 plugin-data 私密配置中设置 `[anime_push].enabled = false`；不要删除或重建提醒数据库。
 
 ## 凭据
 
-不要请求用户在对话中粘贴 Access Token。Token 只应写入 Akashic 插件数据目录的 `config.local.toml`，不得出现在回复、日志、命令参数或工具结果中。
+不要请求用户在对话中粘贴 Access Token。Token 只应写入 Roxy 插件数据目录的 `config.local.toml`，不得出现在回复、日志、命令参数或工具结果中。

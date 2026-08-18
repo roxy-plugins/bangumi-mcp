@@ -220,7 +220,7 @@ list_collections(
 
 ### `plugin.py`
 
-实现发布时将插件版本提升为 `0.2.0`，确保 Akashic GitHub 安装得到新的不可变 cache 版本。
+实现发布时将插件版本提升为 `0.2.0`，确保 Roxy GitHub 安装得到新的不可变 cache 版本。
 
 ## 9. 安全与隐私
 
@@ -286,7 +286,7 @@ list_collections(
 5. 不把 `ep_status` 描述成准确连续观看进度，不用它执行写入。
 6. 不依赖 `updated_at` 实现“最近更新”语义。
 7. 不新增 Token、日志、缓存或写入风险。
-8. 全部测试、Plugin API v2 合同和真实 Akashic 安装 smoke 通过后才能发布 `0.2.0`。
+8. 全部测试、Plugin API v2 合同和真实 Roxy 安装 smoke 通过后才能发布 `0.2.0`。
 
 ## 13. 后续方向
 

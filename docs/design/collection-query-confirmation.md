@@ -229,4 +229,4 @@ execute_prepared_collection_query(
 4. 为普通分页引入查询会话计数，阻止达到 100 条时的无确认读取。
 5. 更新 Skill，确保任何“全部”措辞也必须先预览，确认后不重复询问。
 6. 补充 MCP schema、Service、确认、分页累计、缓存和敏感信息边界测试。
-7. 通过 Plugin API v2 合同和 Akashic 已提交快照安装 smoke 后，再将插件版本提升为 `0.4.0`。
+7. 通过 Plugin API v2 合同和 Roxy 已提交快照安装 smoke 后，再将插件版本提升为 `0.4.0`。
